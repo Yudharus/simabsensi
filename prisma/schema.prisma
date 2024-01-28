@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./sim_absensi.db"
+}
+
+model tb_karyawan {
+  id_karyawan   Int             @id @default(autoincrement())
+  username      String          @unique
+  password      String
+  nama          String
+  tmp_tgl_lahir String
+  jenkel        String
+  agama         String
+  alamat        String
+  no_tel        String
+  jabatan_id    Int
+  tb_jabatan    tb_jabatan      @relation(fields: [jabatan_id], references: [id_jabatan], onDelete: NoAction, onUpdate: NoAction)
+  tb_absen      tb_absen[]
+  tb_keterangan tb_keterangan[]
+}
+
+model tb_jabatan {
+  id_jabatan   Int           @id @default(autoincrement())
+  nama_jabatan String
+  tb_karyawan  tb_karyawan[]
+}
+
+model tb_absen {
+  id_absen    Int         @id @default(autoincrement())
+  waktu       String
+  id_karyawan Int
+  tb_karyawan tb_karyawan @relation(fields: [id_karyawan], references: [id_karyawan], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tb_keterangan {
+  id_keterangan Int         @id @default(autoincrement())
+  id_karyawan   Int
+  tb_karyawan   tb_karyawan @relation(fields: [id_karyawan], references: [id_karyawan], onDelete: NoAction, onUpdate: NoAction)
+  keterangan    String
+  alasan        String
+}
